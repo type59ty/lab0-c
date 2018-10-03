@@ -41,11 +41,10 @@ void q_free(queue_t *q)
     /* Free queue structure */
     if (q == NULL)
         return;
-    list_ele_t *x = q->head;
-    while (x) {
-        list_ele_t *tmp = x;
-        x = x->next;
-        free(tmp);
+    while (q->head) {
+        list_ele_t *x = q->head;
+        q->head = q->head->next;
+        free(x);
     }
     free(q);
 }
