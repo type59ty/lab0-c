@@ -64,14 +64,18 @@ bool q_insert_head(queue_t *q, char *s)
     list_ele_t *newh;
     newh = malloc(sizeof(list_ele_t));
     if (newh != NULL) {
-        if (q->size == 0) {
-            q->head = newh;
-            q->tail = q->head;
-        } else {
-            newh->value = strdup(s);
-            newh->next = q->head;
-            q->head = newh;
+        newh->value = strdup(s);
+        if (newh->value == NULL) {
+            free(newh);
+            return false;
         }
+        if (q->size == 0) {
+            q->tail = newh;
+            newh->next = NULL;
+        } else {
+            newh->next = q->head;
+        }
+        q->head = newh;
         q->size++;
         return true;
     } else
@@ -93,15 +97,19 @@ bool q_insert_tail(queue_t *q, char *s)
     list_ele_t *newt;
     newt = malloc(sizeof(list_ele_t));
     if (newt != NULL) {
+        newt->value = strdup(s);
+        if (newt->value == NULL) {
+            free(newt);
+            return false;
+        }
         if (q->size == 0) {
             q->head = newt;
-            q->tail = q->head;
+            newt->next = NULL;
         } else {
             q->tail->next = newt;
-            q->tail = newt;
-            newt->value = strdup(s);
             newt->next = NULL;
         }
+        q->tail = newt;
         q->size++;
         return true;
     } else
