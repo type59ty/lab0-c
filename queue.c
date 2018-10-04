@@ -46,6 +46,7 @@ void q_free(queue_t *q)
         q->head = q->head->next;
         free(x);
     }
+    q->size = 0;
     free(q);
 }
 
@@ -127,10 +128,25 @@ bool q_insert_tail(queue_t *q, char *s)
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
     /* You need to fix up this code. */
-    q->head = q->head->next;
+    if (q == NULL)
+        return false;
+    if (q->size == 0)
+        return false;
+    if (sp != NULL) {
+        int cpysize = strlen(q->head->value);
+        if (cpysize < bufsize - 1)
+            cpysize = bufsize - 1;
+        strncpy(sp, q->head->value, cpysize);
+        sp[cpysize] = '\0';
+    }
+    list_ele_t *x;
+    x = q->head;
+    if (q->head->next != NULL)
+        q->head = q->head->next;
+    q->size--;
+    free(x);
     return true;
 }
-
 /*
   Return number of elements in queue.
   Return 0 if q is NULL or empty
@@ -139,6 +155,8 @@ int q_size(queue_t *q)
 {
     /* You need to write the code for this function */
     /* Remember: It should operate in O(1) time */
+    if (q == NULL)
+        return 0;
     return q->size;
 }
 
