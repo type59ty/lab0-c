@@ -172,9 +172,33 @@ int q_size(queue_t *q)
   (e.g., by calling q_insert_head, q_insert_tail, or q_remove_head).
   It should rearrange the existing ones.
  */
+
+
+// doubly linked list version q_reverse
 void q_reverse(queue_t *q)
 {
-    /* You need to write the code for this function */
+    if ((q == NULL) || (q->size <= 1))
+        return;
+
+    list_ele_t *current;
+    list_ele_t *temp;
+    current = q->head;
+    q->tail = q->head;
+    while (current != NULL) {
+        temp = current->prev;
+        current->prev = current->next;
+        current->next = temp;
+        current = current->prev;
+    }
+    temp = temp->prev;
+    temp->prev = NULL;
+    q->head = temp;
+}
+
+/*
+void q_reverse(queue_t *q)
+{
+    / You need to write the code for this function
     if ((q == NULL) || (q->size <= 1))
         return;
     list_ele_t *prev;
@@ -197,3 +221,4 @@ void q_reverse(queue_t *q)
     prev->prev = current;
     q->head = current;
 }
+*/
