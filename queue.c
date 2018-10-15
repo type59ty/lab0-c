@@ -73,8 +73,11 @@ bool q_insert_head(queue_t *q, char *s)
         if (q->size == 0) {
             q->tail = newh;
             newh->next = NULL;
+            newh->prev = NULL;
         } else {
+            newh->prev = NULL;
             newh->next = q->head;
+            q->head->prev = newh;
         }
         q->head = newh;
         q->size++;
@@ -106,9 +109,12 @@ bool q_insert_tail(queue_t *q, char *s)
         if (q->size == 0) {
             q->head = newt;
             newt->next = NULL;
+            newt->prev = NULL;
+
         } else {
             q->tail->next = newt;
             newt->next = NULL;
+            newt->prev = q->tail;
         }
         q->tail = newt;
         q->size++;
@@ -138,8 +144,10 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
     }
     list_ele_t *x;
     x = q->head;
-    if (q->head != NULL)
+    if (q->head != NULL) {
         q->head = q->head->next;
+        q->head->prev = NULL;
+    }
     q->size--;
     free(x);
     return true;
@@ -180,10 +188,12 @@ void q_reverse(queue_t *q)
     q->tail = prev;
     while (prec != NULL) {
         current->next = prev;
+        prev->prev = current;
         prev = current;
         current = prec;
         prec = prec->next;
     }
     current->next = prev;
+    prev->prev = current;
     q->head = current;
 }
